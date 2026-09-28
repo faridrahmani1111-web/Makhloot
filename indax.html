@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<title>مواد خالص و مخلوط | مهندس رحمانی</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{touch-action:manipulation}
+body{margin:0;padding:0;font-family:'Vazirmatn',Tahoma,sans-serif;color:#1e293b;
+  background:radial-gradient(1200px 700px at 20% -10%,#1e1b4b 0%,#312e81 40%,#4c1d95 100%);
+  min-height:100vh;overflow-x:hidden;transition:background 1.2s;
+  padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
+body.day{background:linear-gradient(160deg,#eef2ff 0%,#f8fafc 45%,#ecfeff 100%);color:#1e293b}
+
+/* Intro */
+#intro{position:fixed;inset:0;background:radial-gradient(circle at 50% 40%,#312e81,#0f172a 60%,#020617);
+  z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;
+  transition:opacity .8s;overflow-y:auto}
+#intro.hide{opacity:0;visibility:hidden;pointer-events:none}
+.intro-card{max-width:560px;width:100%;margin:auto;text-align:center}
+.creator-top{font-size:11px;color:#fbbf24;font-weight:800;
+  background:rgba(251,191,36,.12);display:inline-block;padding:5px 14px;
+  border-radius:999px;border:1px solid rgba(251,191,36,.35);margin-bottom:20px}
+.orb{width:120px;height:120px;border-radius:50%;margin:0 auto 20px;
+  background:radial-gradient(circle at 35% 30%,#67e8f9,#0ea5e9 40%,#4f46e5 75%,#1e1b4b);
+  box-shadow:0 0 60px rgba(103,232,249,.7),0 0 120px rgba(79,70,229,.5);
+  animation:orbFloat 3s ease-in-out infinite;position:relative}
+.orb::before{content:'';position:absolute;inset:15%;border-radius:50%;
+  background:radial-gradient(circle at 40% 35%,rgba(255,255,255,.8),transparent 60%)}
+@keyframes orbFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-10px) scale(1.03)}}
+.pov-text{color:#e0e7ff;font-size:15.5px;line-height:2.1;min-height:180px;
+  margin:16px 0;font-weight:600;padding:0 8px;text-align:center}
+.pov-text .cursor{display:inline-block;width:9px;height:17px;background:#67e8f9;
+  vertical-align:middle;animation:blink .7s steps(2) infinite;border-radius:2px;margin-right:3px}
+@keyframes blink{50%{opacity:0}}
+#startBtn{background:linear-gradient(135deg,#06b6d4,#6366f1);color:#fff;border:none;
+  font-family:inherit;font-weight:800;font-size:16px;padding:15px 42px;border-radius:16px;
+  cursor:pointer;box-shadow:0 14px 30px rgba(99,102,241,.5);
+  min-height:54px;width:100%;max-width:280px;margin-top:14px;transition:.25s;
+  opacity:.35;pointer-events:none}
+#startBtn.show{opacity:1;pointer-events:auto}
+#startBtn:active{transform:scale(.97)}
+
+/* Header */
+header{padding:14px 14px 0;text-align:center}
+h1{font-size:clamp(17px,3.2vw,28px);margin:0 0 6px;font-weight:900;
+   background:linear-gradient(90deg,#22d3ee,#a855f7,#f472b6);
+   -webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{font-size:clamp(11px,1.6vw,13px);color:#93c5fd;margin:0 0 6px;font-weight:600}
+body.day .sub{color:#64748b}
+.creator-bar{display:inline-block;font-size:11px;color:#fbbf24;font-weight:800;
+  background:rgba(251,191,36,.15);padding:4px 12px;border-radius:999px;
+  border:1px solid rgba(251,191,36,.35)}
+body.day .creator-bar{color:#b45309;background:rgba(251,191,36,.2);border-color:rgba(180,83,9,.3)}
+
+/* Story bar */
+.story-bar{display:flex;align-items:center;justify-content:center;gap:8px;
+  margin:16px auto 12px;max-width:560px;padding:0 14px}
+.step{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-weight:800;font-size:13px;background:#1e293b;
+  color:#475569;border:2px solid #334155;transition:.4s;position:relative;flex-shrink:0}
+body.day .step{background:#fff;color:#94a3b8;border-color:#e2e8f0}
+.step.unlocked{background:linear-gradient(135deg,#06b6d4,#6366f1);color:#fff;
+  border-color:transparent;box-shadow:0 0 0 5px rgba(6,182,212,.2)}
+.step.done::after{content:'✓';position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#10b981,#059669);border-radius:50%;
+  color:#fff;font-size:18px}
+.step-line{flex:1;height:3px;background:#334155;border-radius:2px;
+  transition:.6s;max-width:70px}
+body.day .step-line{background:#e2e8f0}
+.step-line.filled{background:linear-gradient(90deg,#06b6d4,#6366f1)}
+
+/* Panels */
+.panel{display:none;max-width:760px;margin:0 auto;padding:0 12px 140px}
+.panel.active{display:block;animation:fade .5s}
+@keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+/* Dialogue */
+#dialogue{position:fixed;left:0;right:0;bottom:0;padding:10px;z-index:900;
+  display:flex;justify-content:center;transition:transform .4s;
+  transform:translateY(130%);padding-bottom:calc(10px + env(safe-area-inset-bottom))}
+#dialogue.show{transform:translateY(0)}
+.dlg-inner{max-width:720px;width:100%;background:#fff;border-radius:20px;
+  padding:13px 15px;display:flex;gap:11px;align-items:flex-start;
+  box-shadow:0 18px 44px rgba(15,23,42,.35);
+  border-right:6px solid #06b6d4}
+.dlg-avatar{font-size:30px;flex-shrink:0;line-height:1;
+  width:44px;height:44px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#67e8f9,#0ea5e9 45%,#4f46e5);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 18px rgba(103,232,249,.6)}
+.dlg-avatar::before{content:'👁';font-size:22px;filter:brightness(2)}
+.dlg-body{flex:1;min-width:0}
+.dlg-name{font-size:12px;font-weight:800;color:#06b6d4;margin-bottom:3px;letter-spacing:.5px}
+.dlg-text{font-size:13.5px;line-height:1.8;color:#1e293b;font-weight:600}
+.dlg-next{margin-top:8px;background:linear-gradient(135deg,#06b6d4,#6366f1);
+  color:#fff;border:none;font-family:inherit;font-weight:700;font-size:12.5px;
+  padding:8px 18px;border-radius:10px;cursor:pointer;min-height:36px}
+
+/* Card */
+.card{background:rgba(255,255,255,.96);border-radius:22px;padding:16px;
+  border:1px solid #e2e8f0;box-shadow:0 12px 34px rgba(15,23,42,.1);
+  margin-bottom:14px;backdrop-filter:blur(6px)}
+.stage-title{text-align:center;font-weight:900;font-size:16px;margin-bottom:4px;color:#1e293b}
+.stage-sub{text-align:center;font-size:11.5px;color:#64748b;
+  font-weight:600;margin-bottom:16px;line-height:1.7}
+
+/* Progress dots */
+.progress-dots{display:flex;justify-content:center;gap:6px;margin:8px 0 16px;flex-wrap:wrap}
+.pd{width:11px;height:11px;border-radius:50%;background:#e2e8f0;
+  transition:.3s;border:1.5px solid #cbd5e1}
+.pd.done{background:linear-gradient(135deg,#10b981,#059669);border-color:#059669}
+.pd.current{background:linear-gradient(135deg,#06b6d4,#6366f1);border-color:#06b6d4;
+  transform:scale(1.3);animation:pdPulse 1.2s ease-in-out infinite}
+@keyframes pdPulse{0%,100%{box-shadow:0 0 0 0 rgba(6,182,212,.6)}
+  50%{box-shadow:0 0 0 6px rgba(6,182,212,0)}}
+
+/* ============ STAGE 1 & 2 items ============ */
+.item-card{background:linear-gradient(160deg,#fff,#f1f5f9);
+  border:2px solid #cbd5e1;border-radius:20px;padding:24px 20px;
+  text-align:center;margin-bottom:18px;
+  box-shadow:0 8px 24px rgba(15,23,42,.08);transition:.3s;position:relative;overflow:hidden}
+.item-card::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+  background:radial-gradient(circle,rgba(6,182,212,.08),transparent 40%);
+  animation:shine 4s ease-in-out infinite;pointer-events:none}
+@keyframes shine{0%,100%{transform:translate(0,0)}50%{transform:translate(20%,20%)}}
+.item-icon{font-size:64px;line-height:1;margin-bottom:8px;
+  filter:drop-shadow(0 8px 16px rgba(0,0,0,.15));
+  animation:itemFloat 2.5s ease-in-out infinite;position:relative;z-index:1}
+@keyframes itemFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.item-name{font-size:20px;font-weight:900;color:#1e293b;position:relative;z-index:1}
+.item-hint{font-size:11.5px;color:#64748b;font-weight:600;margin-top:6px;
+  position:relative;z-index:1;line-height:1.6}
+
+/* Choices */
+.choices{display:grid;gap:10px;grid-template-columns:1fr 1fr;margin-top:6px}
+.choices.three{grid-template-columns:1fr 1fr 1fr}
+.choices.four{grid-template-columns:1fr 1fr}
+.choice{font-family:inherit;font-size:13px;font-weight:800;
+  padding:14px 8px;border-radius:14px;border:2px solid #e2e8f0;
+  background:#fff;cursor:pointer;transition:.2s;color:#334155;
+  min-height:60px;touch-action:manipulation;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
+.choice .ch-emoji{font-size:22px;line-height:1}
+.choice .ch-sub{font-size:9.5px;color:#94a3b8;font-weight:600;margin-top:1px}
+.choice:active{transform:scale(.97)}
+.choice.correct{background:#ecfdf5;border-color:#10b981;color:#065f46;
+  box-shadow:0 0 0 4px rgba(16,185,129,.15)}
+.choice.wrong{background:#fef2f2;border-color:#ef4444;color:#991b1b;
+  animation:shake .4s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(6px)}75%{transform:translateX(-6px)}}
+.choice:disabled{cursor:default}
+.choice.dim{opacity:.35;pointer-events:none}
+
+/* Feedback */
+.feedback{margin-top:14px;padding:12px 14px;border-radius:14px;font-size:12.5px;
+  line-height:1.9;display:none;font-weight:600}
+.feedback.show{display:block;animation:fade .3s}
+.feedback.ok{background:#ecfdf5;color:#065f46;border:1.5px solid #6ee7b7}
+.feedback.no{background:#fef2f2;color:#991b1b;border:1.5px solid #fca5a5}
+
+/* ============ STAGE 3: Combine visual ============ */
+.combine-stage{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  padding:26px 12px;
+  background:linear-gradient(135deg,#f8fafc,#e0e7ff);
+  border-radius:20px;
+  margin-bottom:18px;
+  min-height:200px;
+  overflow:hidden;
+  transition:background .5s;
+}
+.combine-stage::before{
+  content:'';
+  position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 50%, rgba(255,255,255,.9) 0%, transparent 60%);
+  opacity:0;
+  transition:opacity .3s;
+  pointer-events:none;
+  z-index:10;
+}
+.combine-stage.flash::before{opacity:1}
+
+.combine-item{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+  padding:14px 14px;
+  background:#fff;
+  border:2px solid #e2e8f0;
+  border-radius:18px;
+  box-shadow:0 6px 16px rgba(15,23,42,.08);
+  min-width:96px;
+  transition:all .65s cubic-bezier(.34,1.3,.64,1);
+  z-index:2;
+  position:relative;
+}
+.combine-item.left{transform:translateX(0);opacity:1}
+.combine-item.right{transform:translateX(0);opacity:1}
+.combine-item.merge-left{transform:translateX(60px) scale(.4);opacity:0}
+.combine-item.merge-right{transform:translateX(-60px) scale(.4);opacity:0}
+
+.combine-icon{font-size:48px;line-height:1;
+  filter:drop-shadow(0 6px 12px rgba(0,0,0,.18))}
+.combine-name{font-size:13px;font-weight:800;color:#1e293b;text-align:center;line-height:1.3}
+.combine-state{font-size:10.5px;font-weight:800;padding:3px 11px;
+  border-radius:999px;margin-top:2px;
+  border:1.5px solid transparent}
+.combine-state.solid{background:#e2e8f0;color:#334155;border-color:#cbd5e1}
+.combine-state.liquid{background:#dbeafe;color:#1d4ed8;border-color:#93c5fd}
+.combine-state.gas{background:#fef3c7;color:#b45309;border-color:#fcd34d}
+
+.combine-plus{
+  font-size:36px;font-weight:900;color:#6366f1;line-height:1;
+  animation:plusPulse 1.3s ease-in-out infinite;
+  transition:opacity .4s,transform .4s;
+  z-index:3;
+}
+@keyframes plusPulse{
+  0%,100%{transform:scale(1);opacity:.7}
+  50%{transform:scale(1.25);opacity:1}
+}
+
+.combine-result{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%) scale(0);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+  padding:16px 22px;
+  background:linear-gradient(160deg,#fef9c3,#fde68a);
+  border:3px solid #f59e0b;
+  border-radius:20px;
+  box-shadow:0 12px 30px rgba(245,158,11,.4);
+  transition:transform .55s cubic-bezier(.34,1.56,.64,1);
+  z-index:15;
+  pointer-events:none;
+}
+.combine-result.show{transform:translate(-50%,-50%) scale(1);pointer-events:auto}
+.combine-result.glow{animation:resultGlow 1.6s ease-in-out infinite}
+@keyframes resultGlow{
+  0%,100%{box-shadow:0 12px 30px rgba(245,158,11,.4),0 0 0 0 rgba(245,158,11,.6)}
+  50%{box-shadow:0 12px 34px rgba(245,158,11,.7),0 0 0 12px rgba(245,158,11,0)}
+}
+.combine-result-icon{font-size:56px;line-height:1;
+  filter:drop-shadow(0 8px 14px rgba(180,83,9,.3));
+  animation:itemFloat 2.5s ease-in-out infinite}
+.combine-result-name{font-size:15px;font-weight:900;color:#92400e;text-align:center}
+.combine-result-ask{font-size:11.5px;color:#78350f;font-weight:700;
+  margin-top:4px;padding:3px 10px;background:rgba(255,255,255,.7);
+  border-radius:999px}
+
+/* Single material visual (for pure) */
+.single-stage{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:26px 12px;
+  background:linear-gradient(135deg,#fef9c3,#fef3c7);
+  border-radius:20px;
+  margin-bottom:18px;
+  min-height:200px;
+  overflow:hidden;
+}
+.single-stage::before,
+.single-stage::after{
+  content:'✦';
+  position:absolute;
+  font-size:22px;
+  color:#f59e0b;
+  animation:sparkle 2s ease-in-out infinite;
+  opacity:.8;
+}
+.single-stage::before{top:20%;left:15%;animation-delay:0s}
+.single-stage::after{bottom:22%;right:14%;animation-delay:1s}
+@keyframes sparkle{
+  0%,100%{transform:scale(.7) rotate(0);opacity:.4}
+  50%{transform:scale(1.4) rotate(180deg);opacity:1}
+}
+.single-item{
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  padding:18px 22px;background:#fff;border:2px solid #fcd34d;
+  border-radius:20px;box-shadow:0 8px 22px rgba(245,158,11,.25);
+  z-index:2;animation:singlePop .6s cubic-bezier(.34,1.56,.64,1)}
+@keyframes singlePop{from{transform:scale(.4) rotate(-8deg);opacity:0}
+  to{transform:scale(1) rotate(0);opacity:1}}
+.single-icon{font-size:64px;line-height:1;
+  filter:drop-shadow(0 8px 16px rgba(245,158,11,.35));
+  animation:itemFloat 2.5s ease-in-out infinite}
+.single-name{font-size:17px;font-weight:900;color:#1e293b;text-align:center}
+.single-tag{font-size:10.5px;font-weight:800;padding:3px 12px;
+  background:#fef3c7;color:#b45309;border-radius:999px;
+  border:1.5px solid #fcd34d}
+.single-note{position:absolute;bottom:14px;left:0;right:0;text-align:center;
+  font-size:11.5px;color:#92400e;font-weight:700}
+
+/* HUD */
+.hud-row{display:flex;justify-content:space-between;align-items:center;
+  margin:12px 4px 0;flex-wrap:wrap;gap:6px}
+.pill{background:#fff;border:1px solid #e2e8f0;border-radius:999px;
+  padding:6px 13px;font-size:12.5px;font-weight:700;color:#475569;
+  box-shadow:0 3px 10px rgba(15,23,42,.05)}
+.pill b{color:#06b6d4}
+
+/* Buttons */
+.btn{font-family:inherit;font-weight:800;border:none;border-radius:14px;
+  padding:13px 22px;cursor:pointer;font-size:14px;transition:.2s;
+  min-height:48px;touch-action:manipulation}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:linear-gradient(135deg,#06b6d4,#6366f1);color:#fff;
+  box-shadow:0 8px 20px rgba(6,182,212,.35);width:100%}
+.btn.ghost{background:#f1f5f9;color:#475569}
+
+/* Badge */
+.badge-popup{position:fixed;inset:0;background:rgba(15,23,42,.85);
+  z-index:1500;display:none;align-items:center;justify-content:center;
+  padding:20px;backdrop-filter:blur(4px)}
+.badge-popup.show{display:flex;animation:fade .4s}
+.badge-card{background:linear-gradient(160deg,#fff,#f1f5f9);border-radius:24px;
+  padding:26px 22px;text-align:center;max-width:360px;width:100%;
+  box-shadow:0 30px 70px rgba(0,0,0,.5);border:3px solid #fbbf24;
+  animation:badgeIn .6s cubic-bezier(.34,1.56,.64,1)}
+@keyframes badgeIn{from{transform:scale(.4) rotate(-15deg);opacity:0}
+  to{transform:scale(1) rotate(0)}}
+.badge-icon{font-size:72px;line-height:1;
+  filter:drop-shadow(0 6px 14px rgba(251,191,36,.6));
+  animation:itemFloat 2.5s ease-in-out infinite}
+.badge-title{font-size:19px;font-weight:900;color:#b45309;margin:10px 0 4px}
+.badge-desc{font-size:12.5px;color:#475569;line-height:1.8;margin-bottom:16px}
+
+/* Scoreboard */
+.scoreboard-popup{position:fixed;inset:0;background:rgba(15,23,42,.92);
+  z-index:1600;display:none;align-items:center;justify-content:center;
+  padding:16px;overflow-y:auto;backdrop-filter:blur(6px)}
+.scoreboard-popup.show{display:flex;animation:fade .5s}
+.scoreboard{background:linear-gradient(160deg,#fff,#f8fafc);
+  border-radius:26px;padding:24px 20px;max-width:440px;width:100%;
+  box-shadow:0 30px 70px rgba(0,0,0,.6);border:3px solid #6366f1;
+  margin:auto;animation:badgeIn .7s cubic-bezier(.34,1.56,.64,1)}
+.sb-medal{text-align:center;font-size:80px;line-height:1;
+  filter:drop-shadow(0 8px 18px rgba(251,191,36,.7));
+  animation:itemFloat 3s ease-in-out infinite}
+.sb-grade{text-align:center;font-size:26px;font-weight:900;color:#b45309;
+  margin:10px 0 4px}
+.sb-grade-title{text-align:center;font-size:13.5px;color:#475569;
+  font-weight:700;margin-bottom:18px}
+.sb-breakdown{background:#f1f5f9;border-radius:14px;padding:14px;margin-bottom:16px}
+.sb-row{display:flex;justify-content:space-between;align-items:center;
+  padding:8px 0;font-size:13px;font-weight:700;color:#334155;
+  border-bottom:1px dashed #cbd5e1}
+.sb-row:last-child{border-bottom:none}
+.sb-row .sb-val{color:#4f46e5;font-weight:900;font-size:14.5px}
+.sb-total{margin-top:8px;padding-top:12px;border-top:2px solid #6366f1;
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:15px;font-weight:900;color:#1e293b}
+.sb-total .sb-val{color:#dc2626;font-size:20px}
+.sb-best{text-align:center;font-size:11.5px;color:#64748b;font-weight:700;
+  margin-bottom:16px;background:#fef3c7;padding:6px 10px;border-radius:10px}
+.sb-creator{text-align:center;font-size:11.5px;color:#b45309;
+  font-weight:800;margin-top:12px;padding-top:12px;border-top:1px dashed #fbbf24}
+.sb-actions{display:flex;gap:8px;margin-top:16px}
+.sb-actions .btn{flex:1}
+
+/* Confetti */
+@keyframes fall{to{transform:translateY(105vh) rotate(720deg);opacity:.3}}
+
+@media(max-width:720px){
+  .choices{gap:8px}
+  .choice{font-size:12px;padding:12px 6px;min-height:58px}
+  .choice .ch-emoji{font-size:20px}
+  .choice .ch-sub{font-size:9px}
+  .item-icon{font-size:52px}
+  .item-name{font-size:17px}
+  .combine-icon{font-size:40px}
+  .combine-item{min-width:80px;padding:11px 10px}
+  .combine-name{font-size:12px}
+  .combine-state{font-size:9.5px;padding:2px 9px}
+  .combine-plus{font-size:28px}
+  .combine-result-icon{font-size:48px}
+  .combine-result-name{font-size:13px}
+  .single-icon{font-size:56px}
+  .card{padding:13px;border-radius:18px}
+  .step{width:32px;height:32px;font-size:12px}
+  .step-line{max-width:40px}
+  .pov-text{font-size:14.5px;min-height:160px}
+  .orb{width:100px;height:100px}
+}
+</style>
+</head>
+<body>
+
+<div id="intro">
+  <div class="intro-card">
+    <div class="creator-top">✍️ اثر آموزشی: مهندس رحمانی</div>
+    <div class="orb"></div>
+    <div class="pov-text" id="povText"></div>
+    <button id="startBtn">✦ ورود به آزمایشگاه</button>
+  </div>
+</div>
+
+<header>
+  <h1>🧪 سفر درون آزمایشگاه</h1>
+  <p class="sub">مواد خالص، مخلوط‌ها و حالت‌های ماده</p>
+  <div class="creator-bar">✍️ طراحی آموزشی: مهندس رحمانی</div>
+</header>
+
+<div class="story-bar">
+  <div class="step" data-step="1">۱</div>
+  <div class="step-line" data-line="1"></div>
+  <div class="step" data-step="2">۲</div>
+  <div class="step-line" data-line="2"></div>
+  <div class="step" data-step="3">۳</div>
+</div>
+
+<!-- Stage 1 -->
+<section class="panel active" id="panel-1">
+  <div class="card">
+    <div class="stage-title">🔍 مرحله ۱: خالص یا مخلوط؟</div>
+    <div class="stage-sub">به هر ماده نگاه کن و تصمیم بگیر:<br>آیا فقط از یک نوع ماده ساخته شده یا چند ماده با هم قاطی شده‌اند؟</div>
+    <div class="progress-dots" id="dots1"></div>
+    <div class="item-card">
+      <div class="item-icon" id="s1-icon">💎</div>
+      <div class="item-name" id="s1-name">—</div>
+      <div class="item-hint" id="s1-hint"></div>
+    </div>
+    <div class="choices">
+      <button class="choice" data-ans="pure">
+        <span class="ch-emoji">💎</span><span>مادهٔ خالص</span>
+      </button>
+      <button class="choice" data-ans="mix">
+        <span class="ch-emoji">🌀</span><span>مخلوط</span>
+      </button>
+    </div>
+    <div class="feedback" id="fb1"></div>
+  </div>
+  <div class="hud-row">
+    <span class="pill">پیشرفت: <b id="s1-progress">۰/۸</b></span>
+    <span class="pill">امتیاز: <b id="score">۰</b></span>
+  </div>
+</section>
+
+<!-- Stage 2 -->
+<section class="panel" id="panel-2">
+  <div class="card">
+    <div class="stage-title">🌀 مرحله ۲: نوع مخلوط</div>
+    <div class="stage-sub">مخلوط‌ها سه نوع دارند. هر کدام را در جای درستش بگذار.</div>
+    <div class="progress-dots" id="dots2"></div>
+    <div class="item-card">
+      <div class="item-icon" id="s2-icon">💧</div>
+      <div class="item-name" id="s2-name">—</div>
+      <div class="item-hint" id="s2-hint"></div>
+    </div>
+    <div class="choices three">
+      <button class="choice" data-ans="homogeneous">
+        <span class="ch-emoji">🟦</span><span>همگن (محلول)</span>
+      </button>
+      <button class="choice" data-ans="heterogeneous">
+        <span class="ch-emoji">🟨</span><span>ناهمگن</span>
+      </button>
+      <button class="choice" data-ans="suspension">
+        <span class="ch-emoji">🌫️</span><span>سوسپانسیون</span>
+      </button>
+    </div>
+    <div class="feedback" id="fb2"></div>
+  </div>
+  <div class="hud-row">
+    <span class="pill">پیشرفت: <b id="s2-progress">۰/۶</b></span>
+    <span class="pill">امتیاز کل: <b id="score2">۰</b></span>
+  </div>
+</section>
+
+<!-- Stage 3 — NEW -->
+<section class="panel" id="panel-3">
+  <div class="card">
+    <div class="stage-title">🧪 مرحله ۳: این نتیجه چیست؟</div>
+    <div class="stage-sub">دو ماده با هم ترکیب می‌شوند و حالت هر کدام زیرش نوشته شده.<br>حالا تصمیم بگیر نتیجه چه نوع ماده‌ای است.</div>
+    <div class="progress-dots" id="dots3"></div>
+
+    <!-- این div توسط جاوااسکریپت پر می‌شود -->
+    <div id="combineContainer"></div>
+
+    <div class="choices four" id="stateChoices">
+      <button class="choice" data-ans="pure">
+        <span class="ch-emoji">💎</span>
+        <span>ماده خالص</span>
+        <span class="ch-sub">فقط یک نوع ماده</span>
+      </button>
+      <button class="choice" data-ans="homogeneous">
+        <span class="ch-emoji">🥃</span>
+        <span>مخلوط همگن</span>
+        <span class="ch-sub">یکنواخت و شفاف</span>
+      </button>
+      <button class="choice" data-ans="heterogeneous">
+        <span class="ch-emoji">🪨</span>
+        <span>مخلوط ناهمگن</span>
+        <span class="ch-sub">چند فاز جدا</span>
+      </button>
+      <button class="choice" data-ans="suspension">
+        <span class="ch-emoji">🌫️</span>
+        <span>سوسپانسیون</span>
+        <span class="ch-sub">ذرات معلق در مایع</span>
+      </button>
+    </div>
+
+    <div class="feedback" id="fb3"></div>
+  </div>
+  <div class="hud-row">
+    <span class="pill">پیشرفت: <b id="s3-progress">۰/۹</b></span>
+    <span class="pill">امتیاز کل: <b id="score3">۰</b></span>
+  </div>
+</section>
+
+<!-- Dialogue -->
+<div id="dialogue">
+  <div class="dlg-inner">
+    <div class="dlg-avatar"></div>
+    <div class="dlg-body">
+      <div class="dlg-name">آزما — صدای آزمایشگاه</div>
+      <div class="dlg-text" id="dlgText"></div>
+      <button class="dlg-next" id="dlgNext" style="display:none">ادامه ▸</button>
+    </div>
+  </div>
+</div>
+
+<!-- Badge -->
+<div class="badge-popup" id="badgePopup">
+  <div class="badge-card">
+    <div class="badge-icon" id="badgeIcon">🏅</div>
+    <div class="badge-title" id="badgeTitle"></div>
+    <div class="badge-desc" id="badgeDesc"></div>
+    <button class="btn primary" id="badgeBtn">ادامه بده</button>
+  </div>
+</div>
+
+<!-- Scoreboard -->
+<div class="scoreboard-popup" id="scoreboardPopup">
+  <div class="scoreboard">
+    <div class="sb-medal" id="sbMedal">🏆</div>
+    <div class="sb-grade" id="sbGrade">A+</div>
+    <div class="sb-grade-title" id="sbGradeTitle"></div>
+    <div class="sb-breakdown">
+      <div class="sb-row"><span>🔍 خالص یا مخلوط</span><span class="sb-val" id="sbS1">۰</span></div>
+      <div class="sb-row"><span>🌀 نوع مخلوط</span><span class="sb-val" id="sbS2">۰</span></div>
+      <div class="sb-row"><span>🧪 نتیجه ترکیب</span><span class="sb-val" id="sbS3">۰</span></div>
+      <div class="sb-total"><span>مجموع امتیاز</span><span class="sb-val" id="sbTotal">۰ / ۲۳۰</span></div>
+    </div>
+    <div class="sb-best" id="sbBest"></div>
+    <div class="sb-actions">
+      <button class="btn primary" id="sbRestart">🔄 دوباره</button>
+      <button class="btn ghost" id="sbClose">بستن</button>
+    </div>
+    <div class="sb-creator">✍️ طراحی آموزشی: مهندس رحمانی</div>
+  </div>
+</div>
+
+<script>
+(function(){
+'use strict';
+var FA='۰۱۲۳۴۵۶۷۸۹';
+function toFa(n){ return String(n).replace(/\d/g,function(d){ return FA[+d]; }); }
+function $(id){ return document.getElementById(id); }
+
+/* SOUND */
+var actx=null;
+function tone(f,d,t,v){
+  try{
+    if(!actx){ actx=new (window.AudioContext||window.webkitAudioContext)(); }
+    if(!actx) return;
+    var o=actx.createOscillator(),g=actx.createGain();
+    o.type=t||'sine'; o.frequency.value=f;
+    g.gain.setValueAtTime(v||.12,actx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+(d||.15));
+    o.connect(g); g.connect(actx.destination);
+    o.start(); o.stop(actx.currentTime+(d||.15));
+  }catch(e){}
+}
+function sndOk(){ tone(660,.09);setTimeout(function(){tone(880,.14);},80); }
+function sndBad(){ tone(180,.25,'sawtooth',.09); }
+function sndStep(){ tone(523,.08);setTimeout(function(){tone(659,.08);},80);setTimeout(function(){tone(784,.16);},160); }
+function sndWin(){ [523,659,784,1047].forEach(function(f,i){ setTimeout(function(){tone(f,.22);},i*110); }); }
+function sndMerge(){ tone(400,.15,'sine',.08);setTimeout(function(){tone(600,.12,'sine',.08);},100);setTimeout(function(){tone(900,.18,'sine',.1);},220); }
+
+/* CONFETTI */
+function confetti(n){
+  n=n||80;
+  var c=['#f43f5e','#fbbf24','#22d3ee','#a855f7','#10b981','#f97316'];
+  for(var i=0;i<n;i++){
+    var e=document.createElement('div');
+    e.style.cssText='position:fixed;width:10px;height:14px;top:-20px;z-index:2000;'+
+      'pointer-events:none;border-radius:2px;left:'+(Math.random()*100)+'vw;'+
+      'background:'+c[Math.floor(Math.random()*c.length)]+';'+
+      'animation:fall '+(2.4+Math.random()*1.8)+'s linear '+(Math.random()*.6)+'s forwards;';
+    document.body.appendChild(e);
+    setTimeout(function(el){ return function(){ if(el.parentNode) el.parentNode.removeChild(el); }; }(e),5000);
+  }
+}
+(function(){
+  var st=document.createElement('style');
+  st.textContent='@keyframes fall{to{transform:translateY(105vh) rotate(720deg);opacity:.3}}';
+  document.head.appendChild(st);
+})();
+
+/* DIALOGUE */
+var dlgQueue=[],dlgOnDone=null,dlgTimer=null;
+function typewrite(text,el,onEnd){
+  if(!el){ onEnd&&onEnd(); return; }
+  clearInterval(dlgTimer); el.innerHTML=''; var i=0;
+  var cursor='<span style="display:inline-block;width:8px;height:15px;'+
+    'background:#67e8f9;vertical-align:middle;animation:blink .7s steps(2) infinite;'+
+    'border-radius:2px;margin-right:3px"></span>';
+  dlgTimer=setInterval(function(){
+    i++; el.innerHTML=text.slice(0,i)+cursor;
+    if(i>=text.length){ clearInterval(dlgTimer); el.innerHTML=text; onEnd&&onEnd(); }
+  },18);
+}
+function say(lines,onDone){
+  if(typeof lines==='string') lines=[lines];
+  dlgQueue=lines.slice(); dlgOnDone=onDone||null;
+  var d=$('dialogue'); if(d) d.classList.add('show');
+  nextLine();
+}
+function nextLine(){
+  var d=$('dialogue'), btn=$('dlgNext');
+  if(dlgQueue.length===0){
+    if(btn) btn.style.display='none';
+    setTimeout(function(){
+      if(d) d.classList.remove('show');
+      var f=dlgOnDone; dlgOnDone=null;
+      if(f) try{ f(); }catch(e){ console.error(e); }
+    },450);
+    return;
+  }
+  if(btn) btn.style.display='none';
+  typewrite(dlgQueue.shift(),$('dlgText'),function(){
+    if(btn){
+      btn.style.display='inline-block';
+      btn.textContent=dlgQueue.length>0?'ادامه ▸':'باشه ✓';
+    }
+  });
+}
+
+/* STEPS */
+function markStepDone(n){ var s=document.querySelector('.step[data-step="'+n+'"]'); if(s)s.classList.add('done'); }
+function unlockStep(n){
+  var s=document.querySelector('.step[data-step="'+n+'"]'); if(s)s.classList.add('unlocked');
+  var l=document.querySelector('.step-line[data-line="'+(n-1)+'"]'); if(l)l.classList.add('filled');
+}
+function switchTab(n){
+  var p=document.querySelectorAll('.panel');
+  for(var i=0;i<p.length;i++) p[i].classList.remove('active');
+  var t=$('panel-'+n); if(t) t.classList.add('active');
+  try{ window.scrollTo({top:0,behavior:'smooth'}); }catch(e){ window.scrollTo(0,0); }
+}
+function showBadge(icon,title,desc,onClose){
+  var pop=$('badgePopup'); if(!pop){ onClose&&onClose(); return; }
+  $('badgeIcon').textContent=icon;
+  $('badgeTitle').textContent=title;
+  $('badgeDesc').textContent=desc;
+  pop.classList.add('show');
+  $('badgeBtn').onclick=function(){ pop.classList.remove('show'); onClose&&onClose(); };
+}
+
+/* ====================================================================
+   DATA
+   ==================================================================== */
+var STAGE1_ITEMS=[
+  { id:'gold', icon:'🥇', name:'طلا (Au)', hint:'فقط از یک نوع اتم ساخته شده.',
+    ans:'pure', tip:'طلا یک <b>عنصر خالص</b> است — همه اتم‌هایش از یک نوع‌اند.' },
+  { id:'water', icon:'💧', name:'آب مقطر', hint:'در آزمایشگاه تصفیه شده است.',
+    ans:'pure', tip:'آب مقطر یک <b>ترکیب خالص</b> است — فقط مولکول‌های H₂O دارد.' },
+  { id:'air', icon:'💨', name:'هوا', hint:'مخلوطی از چند گاز مختلف.',
+    ans:'mix', tip:'هوا مخلوطی از نیتروژن، اکسیژن، آرگون و ... است.' },
+  { id:'milk', icon:'🥛', name:'شیر', hint:'آب + چربی + پروتئین + قند.',
+    ans:'mix', tip:'شیر از چند ماده ساخته شده — پس <b>مخلوط</b> است.' },
+  { id:'o2', icon:'🫁', name:'اکسیژن (O₂)', hint:'گاز تنفس ما.',
+    ans:'pure', tip:'اکسیژن یک <b>عنصر خالص</b> است.' },
+  { id:'syrup', icon:'🍯', name:'شربت شکر', hint:'شکر در آب حل شده.',
+    ans:'mix', tip:'شربت شکر <b>مخلوط</b> است (از آب و شکر).' },
+  { id:'salt', icon:'🧂', name:'نمک خوراکی (NaCl)', hint:'ترکیبی از سدیم و کلر.',
+    ans:'pure', tip:'نمک خوراکی یک <b>ترکیب خالص</b> است.' },
+  { id:'soil', icon:'🪨', name:'خاک باغچه', hint:'شن، رس، مواد آلی و آب.',
+    ans:'mix', tip:'خاک از چند ماده مختلف ساخته شده — <b>مخلوط</b>.' }
+];
+
+var STAGE2_ITEMS=[
+  { id:'sugarwater', icon:'🥤', name:'آب و شکر', hint:'شکر کاملاً در آب حل شده و یکنواخت است.',
+    ans:'homogeneous', tip:'شکر کاملاً حل شده — <b>محلول همگن</b>.' },
+  { id:'sandwater', icon:'🏖️', name:'آب و ماسه', hint:'ماسه ته ظرف ته‌نشین می‌شود.',
+    ans:'heterogeneous', tip:'ماسه درشت است و ته‌نشین می‌شود — <b>ناهمگن</b>.' },
+  { id:'orangesyrup', icon:'🍊', name:'شربت پرتقال با پالپ', hint:'ذرات ریز پالپ سوسو می‌زنند.',
+    ans:'suspension', tip:'ذرات پالپ در مایع <b>معلق</b> هستند — <b>سوسپانسیون</b>.' },
+  { id:'airmix', icon:'🌬️', name:'هوای اتاق', hint:'نیتروژن، اکسیژن، CO₂ یکنواخت.',
+    ans:'homogeneous', tip:'هوا یک <b>محلول همگن گازی</b> است.' },
+  { id:'oilwater', icon:'🫒', name:'آب و روغن', hint:'روغن روی آب می‌ماند.',
+    ans:'heterogeneous', tip:'دو لایه جدا — <b>ناهمگن</b>.' },
+  { id:'antibiotic', icon:'💊', name:'شربت آنتی‌بیوتیک', hint:'دارو به شکل ذرات ریز معلق.',
+    ans:'suspension', tip:'ذرات دارو معلق‌اند و قبل از مصرف باید تکان داد — <b>سوسپانسیون</b>.' }
+];
+
+/* ====================================================================
+   STAGE 3 — جدید
+==================================================================== */
+var STAGE3_ITEMS=[
+  /* ---- مخلوط همگن ---- */
+  { id:'brass', type:'combo',
+    icon1:'🥉', name1:'مس', state1:'s', state1Label:'جامد',
+    icon2:'⚙️', name2:'روی', state2:'s', state2Label:'جامد',
+    combineEmoji:'🔔', combineLabel:'برنج (آلیاژ)',
+    ans:'homogeneous',
+    tip:'برنج از <b>مس و روی</b> (هر دو جامد) ساخته شده. فلزات در حالت مذاب یکنواخت با هم قاطی می‌شوند و پس از سرد شدن، یک ساختار یکنواخت می‌سازند → <b>مخلوط همگن</b>.' },
+
+  { id:'saltwater', type:'combo',
+    icon1:'💧', name1:'آب', state1:'l', state1Label:'مایع',
+    icon2:'🧂', name2:'نمک', state2:'s', state2Label:'جامد',
+    combineEmoji:'🥤', combineLabel:'آب نمک',
+    ans:'homogeneous',
+    tip:'نمک (جامد) در آب (مایع) کاملاً حل می‌شود و در همه جای محلول یکنواخت پخش می‌شود → <b>مخلوط همگن (محلول)</b>.' },
+
+  { id:'soda', type:'combo',
+    icon1:'💧', name1:'آب', state1:'l', state1Label:'مایع',
+    icon2:'💨', name2:'گاز CO₂', state2:'g', state2Label:'گاز',
+    combineEmoji:'🥤', combineLabel:'نوشابه گازدار',
+    ans:'homogeneous',
+    tip:'گاز CO₂ در آب حل می‌شود و به‌صورت یکنواخت پخش می‌شود → <b>مخلوط همگن</b>. به همین دلیل گاز در همه جای نوشابه هست.' },
+
+  { id:'air', type:'combo',
+    icon1:'🫁', name1:'اکسیژن', state1:'g', state1Label:'گاز',
+    icon2:'💨', name2:'نیتروژن', state2:'g', state2Label:'گاز',
+    combineEmoji:'🌬️', combineLabel:'هوا',
+    ans:'homogeneous',
+    tip:'گازها با هر نسبتی یکنواخت با هم مخلوط می‌شوند → <b>مخلوط همگن گازی</b>.' },
+
+  /* ---- مخلوط ناهمگن ---- */
+  { id:'oilwater', type:'combo',
+    icon1:'💧', name1:'آب', state1:'l', state1Label:'مایع',
+    icon2:'🫒', name2:'روغن', state2:'l', state2Label:'مایع',
+    combineEmoji:'🥣', combineLabel:'آب و روغن',
+    ans:'heterogeneous',
+    tip:'آب و روغن در هم حل نمی‌شوند و دو لایه جدا می‌سازند → <b>مخلوط ناهمگن</b>.' },
+
+  { id:'sandwater', type:'combo',
+    icon1:'💧', name1:'آب', state1:'l', state1Label:'مایع',
+    icon2:'🏖️', name2:'ماسه', state2:'s', state2Label:'جامد',
+    combineEmoji:'🥃', combineLabel:'آب و ماسه',
+    ans:'heterogeneous',
+    tip:'ماسه درشت است و در آب حل نمی‌شود و ته‌نشین می‌شود → <b>مخلوط ناهمگن</b>.' },
+
+  /* ---- سوسپانسیون ---- */
+  { id:'tokhmeh', type:'combo',
+    icon1:'💧', name1:'آب', state1:'l', state1Label:'مایع',
+    icon2:'🌱', name2:'خاکشیر', state2:'s', state2Label:'جامد',
+    combineEmoji:'🥤', combineLabel:'شربت خاکشیر',
+    ans:'suspension',
+    tip:'دانه‌های ریز خاکشیر در آب <b>معلق</b> می‌مانند و آرام‌آرام ته‌نشین می‌شوند → <b>سوسپانسیون (تعلیقه)</b>.' },
+
+  { id:'orange', type:'combo',
+    icon1:'💧', name1:'آب', state1:'l', state1Label:'مایع',
+    icon2:'🍊', name2:'پالپ پرتقال', state2:'s', state2Label:'جامد',
+    combineEmoji:'🧃', combineLabel:'آب پرتقال طبیعی',
+    ans:'suspension',
+    tip:'ذرات ریز پالپ در آب پرتقال معلق می‌مانند → <b>سوسپانسیون</b>. قبل از نوشیدن باید تکانش بدهی.' },
+
+  /* ---- خالص (تک‌ماده‌ای) ---- */
+  { id:'gold', type:'single',
+    icon1:'🥇', name1:'طلا', state1:'s', state1Label:'جامد',
+    combineEmoji:'🥇', combineLabel:'طلا (Au)',
+    ans:'pure',
+    tip:'طلا فقط از اتم‌های طلا ساخته شده و هیچ ماده دیگری ندارد → <b>ماده خالص (عنصر)</b>.' }
+];
+
+/* ====================================================================
+   STAGE 1
+==================================================================== */
+var s1Index=0, s1Score=0, s1Done=false;
+function renderDots(containerId, total, current){
+  var el=$(containerId); if(!el) return;
+  el.innerHTML='';
+  for(var i=0;i<total;i++){
+    var d=document.createElement('div');
+    d.className='pd'+(i<current?' done':'')+(i===current?' current':'');
+    el.appendChild(d);
+  }
+}
+function loadStage1(){
+  var item=STAGE1_ITEMS[s1Index];
+  if(!item){ finishStage1(); return; }
+  $('s1-icon').textContent=item.icon;
+  $('s1-name').textContent=item.name;
+  $('s1-hint').textContent=item.hint;
+  $('s1-progress').textContent=toFa(s1Index)+'/'+toFa(STAGE1_ITEMS.length);
+  $('fb1').className='feedback'; $('fb1').innerHTML='';
+  renderDots('dots1',STAGE1_ITEMS.length,s1Index);
+  var btns=document.querySelectorAll('#panel-1 .choice');
+  for(var i=0;i<btns.length;i++){
+    btns[i].disabled=false;
+    btns[i].classList.remove('correct','wrong','dim');
+  }
+}
+function answerStage1(btn, ans){
+  var item=STAGE1_ITEMS[s1Index]; if(!item) return;
+  var btns=document.querySelectorAll('#panel-1 .choice');
+  for(var i=0;i<btns.length;i++) btns[i].disabled=true;
+  var fb=$('fb1');
+  if(ans===item.ans){
+    sndOk(); btn.classList.add('correct'); s1Score+=10;
+    fb.className='feedback ok show';
+    fb.innerHTML='✅ درست! '+item.tip;
+    s1Index++; updateTotalScore();
+    setTimeout(function(){ loadStage1(); }, 1900);
+  } else {
+    sndBad(); btn.classList.add('wrong');
+    fb.className='feedback no show';
+    fb.innerHTML='❌ نه، دوباره فکر کن.<br><b>راهنما:</b> '+item.hint;
+    setTimeout(function(){
+      btn.classList.remove('wrong');
+      for(var i=0;i<btns.length;i++) btns[i].disabled=false;
+    }, 1200);
+  }
+}
+function finishStage1(){
+  s1Done=true; markStepDone(1); unlockStep(2); sndStep();
+  showBadge('🏅','نشان «دسته‌بند مواد»','مواد خالص و مخلوط را از هم تشخیص دادی!', function(){
+    say([
+      'خوب بود... 🌀 حالا وارد بخش دوم می‌شویم.',
+      'مخلوط‌ها سه دسته دارند: <b>همگن (محلول)</b>، <b>ناهمگن</b>، و <b>سوسپانسیون (تعلیقه)</b>.',
+      'آماده‌ای؟ بزن بریم!'
+    ], function(){ switchTab(2); loadStage2(); });
+  });
+}
+
+/* ====================================================================
+   STAGE 2
+==================================================================== */
+var s2Index=0, s2Score=0, s2Done=false;
+function loadStage2(){
+  var item=STAGE2_ITEMS[s2Index];
+  if(!item){ finishStage2(); return; }
+  $('s2-icon').textContent=item.icon;
+  $('s2-name').textContent=item.name;
+  $('s2-hint').textContent=item.hint;
+  $('s2-progress').textContent=toFa(s2Index)+'/'+toFa(STAGE2_ITEMS.length);
+  $('fb2').className='feedback'; $('fb2').innerHTML='';
+  renderDots('dots2',STAGE2_ITEMS.length,s2Index);
+  var btns=document.querySelectorAll('#panel-2 .choice');
+  for(var i=0;i<btns.length;i++){
+    btns[i].disabled=false;
+    btns[i].classList.remove('correct','wrong');
+  }
+}
+function answerStage2(btn, ans){
+  var item=STAGE2_ITEMS[s2Index]; if(!item) return;
+  var btns=document.querySelectorAll('#panel-2 .choice');
+  for(var i=0;i<btns.length;i++) btns[i].disabled=true;
+  var fb=$('fb2');
+  if(ans===item.ans){
+    sndOk(); btn.classList.add('correct'); s2Score+=10;
+    fb.className='feedback ok show';
+    fb.innerHTML='✅ درست! '+item.tip;
+    s2Index++; updateTotalScore();
+    setTimeout(function(){ loadStage2(); }, 2000);
+  } else {
+    sndBad(); btn.classList.add('wrong');
+    fb.className='feedback no show';
+    fb.innerHTML='❌ نه، دوباره دقت کن.<br><b>راهنما:</b> '+item.hint;
+    setTimeout(function(){
+      btn.classList.remove('wrong');
+      for(var i=0;i<btns.length;i++) btns[i].disabled=false;
+    }, 1300);
+  }
+}
+function finishStage2(){
+  s2Done=true; markStepDone(2); unlockStep(3); sndStep();
+  showBadge('🔬','نشان «شناساگر مخلوط‌ها»','سه نوع مخلوط را از هم تشخیص دادی!', function(){
+    say([
+      'عالی! حالا آخرین بخش... 🧪',
+      'دو ماده با هم ترکیب می‌شوند. حالت هر کدام را نشانت می‌دهم.',
+      'بعد از ترکیب، باید تشخیص بدهی نتیجه چیست: <b>خالص</b>، <b>مخلوط همگن</b>، <b>مخلوط ناهمگن</b> یا <b>سوسپانسیون</b>.',
+      'آماده‌ای؟ برو!'
+    ], function(){ switchTab(3); loadStage3(); });
+  });
+}
+
+/* ====================================================================
+   STAGE 3 — جدید
+==================================================================== */
+var s3Index=0, s3Score=0, s3Done=false;
+
+function makeCombineItem(icon, name, state, stateLabel){
+  var div=document.createElement('div');
+  div.className='combine-item';
+  var stateClass = state==='s'?'solid':state==='l'?'liquid':'gas';
+  div.innerHTML=
+    '<div class="combine-icon">'+icon+'</div>'+
+    '<div class="combine-name">'+name+'</div>'+
+    '<div class="combine-state '+stateClass+'">'+stateLabel+'</div>';
+  return div;
+}
+
+function loadStage3(){
+  var item=STAGE3_ITEMS[s3Index];
+  if(!item){ finishStage3(); return; }
+
+  var container=$('combineContainer');
+  container.innerHTML='';
+
+  // Progress + feedback reset
+  $('s3-progress').textContent=toFa(s3Index)+'/'+toFa(STAGE3_ITEMS.length);
+  $('fb3').className='feedback'; $('fb3').innerHTML='';
+  renderDots('dots3',STAGE3_ITEMS.length,s3Index);
+
+  // Choices: disable initially
+  var btns=document.querySelectorAll('#panel-3 .choice');
+  for(var i=0;i<btns.length;i++){
+    btns[i].disabled=true;
+    btns[i].classList.remove('correct','wrong');
+    btns[i].classList.add('dim');
+  }
+
+  if(item.type==='single'){
+    // ---- تک‌ماده ----
+    var stage=document.createElement('div');
+    stage.className='single-stage';
+    var single=document.createElement('div');
+    single.className='single-item';
+    var sClass=item.state1==='s'?'solid':item.state1==='l'?'liquid':'gas';
+    single.innerHTML=
+      '<div class="single-icon">'+item.icon1+'</div>'+
+      '<div class="single-name">'+item.name1+'</div>'+
+      '<div class="single-tag">حالت: '+item.state1Label+'</div>';
+    stage.appendChild(single);
+    var note=document.createElement('div');
+    note.className='single-note';
+    note.textContent='— فقط یک ماده در ظرف —';
+    stage.appendChild(note);
+    container.appendChild(stage);
+
+    // Enable choices after short delay
+    setTimeout(function(){
+      for(var i=0;i<btns.length;i++){
+        btns[i].disabled=false;
+        btns[i].classList.remove('dim');
+      }
+    }, 1200);
+  } else {
+    // ---- دو ماده که ترکیب می‌شوند ----
+    var stage2=document.createElement('div');
+    stage2.className='combine-stage';
+    stage2.id='combineStageInner';
+
+    var item1=makeCombineItem(item.icon1, item.name1, item.state1, item.state1Label);
+    item1.classList.add('left');
+    var plus=document.createElement('div');
+    plus.className='combine-plus';
+    plus.textContent='+';
+    var item2=makeCombineItem(item.icon2, item.name2, item.state2, item.state2Label);
+    item2.classList.add('right');
+
+    stage2.appendChild(item1);
+    stage2.appendChild(plus);
+    stage2.appendChild(item2);
+    container.appendChild(stage2);
+
+    // انیمیشن ترکیب
+    sndMerge();
+    setTimeout(function(){
+      item1.classList.add('merge-left');
+      item2.classList.add('merge-right');
+      plus.style.opacity='0';
+      plus.style.transform='scale(2)';
+
+      // Flash
+      setTimeout(function(){
+        stage2.classList.add('flash');
+        setTimeout(function(){ stage2.classList.remove('flash'); }, 200);
+      }, 500);
+
+      // نمایش نتیجه
+      setTimeout(function(){
+        var result=document.createElement('div');
+        result.className='combine-result';
+        result.innerHTML=
+          '<div class="combine-result-icon">'+item.combineEmoji+'</div>'+
+          '<div class="combine-result-name">'+item.combineLabel+'</div>'+
+          '<div class="combine-result-ask">این نتیجه چیست؟</div>';
+        stage2.appendChild(result);
+        setTimeout(function(){
+          result.classList.add('show');
+          setTimeout(function(){ result.classList.add('glow'); }, 500);
+        }, 30);
+
+        // Enable choices
+        setTimeout(function(){
+          for(var i=0;i<btns.length;i++){
+            btns[i].disabled=false;
+            btns[i].classList.remove('dim');
+          }
+        }, 700);
+      }, 1100);
+    }, 1400);
+  }
+}
+
+function answerStage3(btn, ans){
+  var item=STAGE3_ITEMS[s3Index]; if(!item) return;
+  var btns=document.querySelectorAll('#panel-3 .choice');
+  for(var i=0;i<btns.length;i++) btns[i].disabled=true;
+  var fb=$('fb3');
+  if(ans===item.ans){
+    sndOk();
+    btn.classList.add('correct');
+    s3Score+=10;
+    fb.className='feedback ok show';
+    fb.innerHTML='✅ درست! '+item.tip;
+    s3Index++;
+    updateTotalScore();
+    setTimeout(function(){ loadStage3(); }, 2400);
+  } else {
+    sndBad();
+    btn.classList.add('wrong');
+    fb.className='feedback no show';
+    fb.innerHTML='❌ نه، دوباره فکر کن.<br><b>راهنما:</b> به این فکر کن که آیا ذرات کاملاً یکنواخت حل شده‌اند یا جدا هستند.';
+    setTimeout(function(){
+      btn.classList.remove('wrong');
+      for(var i=0;i<btns.length;i++) btns[i].disabled=false;
+    }, 1500);
+  }
+}
+
+function finishStage3(){
+  s3Done=true; markStepDone(3); sndStep();
+  showBadge('🏆','نشان «شیمی‌دان کامل»','همه مراحل را پشت سر گذاشتی!', function(){
+    say([
+      '🎉 تبریک! تو از این آزمایشگاه بیرون آمدی...',
+      'اما این بار <b>با دانشی تازه</b>:',
+      'می‌دانی چه چیزی خالص است و چه چیزی مخلوط.',
+      'می‌دانی مخلوط‌ها سه نوع دارند.',
+      'و می‌دانی وقتی دو ماده ترکیب می‌شوند، چه چیزهایی می‌توانند بسازند.',
+      'حالا وقت کارنامه است... ✨'
+    ], function(){ confetti(150); setTimeout(showScoreboard, 1200); });
+  });
+}
+
+/* ====================================================================
+   SCORE
+==================================================================== */
+function updateTotalScore(){
+  var total=s1Score+s2Score+s3Score;
+  var sc1=$('score'); if(sc1) sc1.textContent=toFa(total);
+  var sc2=$('score2'); if(sc2) sc2.textContent=toFa(total);
+  var sc3=$('score3'); if(sc3) sc3.textContent=toFa(total);
+}
+function showScoreboard(){
+  var total=s1Score+s2Score+s3Score;
+  var maxTotal=STAGE1_ITEMS.length*10+STAGE2_ITEMS.length*10+STAGE3_ITEMS.length*10;
+  var grade='E',title='نیاز به تلاش بیشتر',medal='📘';
+  if(total>=maxTotal*0.9){ grade='A+'; title='استاد مواد و مخلوط‌ها'; medal='🏆'; }
+  else if(total>=maxTotal*0.75){ grade='A'; title='شیمی‌دان ماهر'; medal='🥇'; }
+  else if(total>=maxTotal*0.6){ grade='B'; title='دستیار فعال'; medal='🥈'; }
+  else if(total>=maxTotal*0.4){ grade='C'; title='شاگرد کوشا'; medal='🎖️'; }
+  else if(total>=maxTotal*0.2){ grade='D'; title='تازه‌کار'; medal='🥉'; }
+
+  $('sbMedal').textContent=medal;
+  $('sbGrade').textContent=grade;
+  $('sbGradeTitle').textContent=title;
+  $('sbS1').textContent=toFa(s1Score);
+  $('sbS2').textContent=toFa(s2Score);
+  $('sbS3').textContent=toFa(s3Score);
+  $('sbTotal').textContent=toFa(total)+' / '+toFa(maxTotal);
+
+  var best=0;
+  try{ best=parseInt(localStorage.getItem('azma_best')||'0',10); }catch(e){}
+  if(total>best){
+    best=total;
+    try{ localStorage.setItem('azma_best',best); }catch(e){}
+    $('sbBest').innerHTML='🎉 <b>رکورد جدید!</b> بهترین امتیاز تو: '+toFa(best);
+  } else {
+    $('sbBest').innerHTML='📊 بهترین رکورد: '+toFa(best)+' — این بار: '+toFa(total);
+  }
+  $('scoreboardPopup').classList.add('show');
+  sndWin(); confetti(150);
+}
+
+/* ====================================================================
+   POV INTRO
+==================================================================== */
+var POV_LINES=[
+  'چشمانت را باز می‌کنی...',
+  'نور آبی کم‌رنگی همه‌جا را روشن کرده. جایی ناآشنا، پر از بشر و لوله‌های آزمایشگاهی.',
+  'یادت نمی‌آید چطور به اینجا رسیدی. اما صدایی آشنا در ذهنت می‌پیچد...',
+  '«به آزمایشگاه من خوش آمدی.»',
+  '«من <b>آزما</b> هستم — هوشیارِ این مکان. سال‌هاست منتظر کسی مثل تو بودم.»',
+  '«سه آزمون پیش رویت است. اگر پشت سر بگذاری، راز <b>مواد خالص، مخلوط‌ها و حالت‌های ماده</b> را خواهی فهمید.»',
+  '«آماده‌ای؟»'
+];
+var povIdx=0, povTimer=null;
+function playPOV(){
+  var el=$('povText'); if(!el) return;
+  if(povIdx>=POV_LINES.length){ $('startBtn').classList.add('show'); return; }
+  var line=POV_LINES[povIdx], i=0;
+  el.innerHTML='';
+  clearInterval(povTimer);
+  var cursor='<span class="cursor"></span>';
+  povTimer=setInterval(function(){
+    i++; el.innerHTML=line.slice(0,i)+cursor;
+    if(i>=line.length){
+      clearInterval(povTimer);
+      el.innerHTML=line;
+      povIdx++;
+      setTimeout(playPOV, 900);
+    }
+  }, 30);
+}
+
+/* ====================================================================
+   INIT
+==================================================================== */
+function startGame(){
+  try{
+    var intro=$('intro'); if(intro) intro.classList.add('hide');
+    document.body.classList.add('day');
+    sndOk();
+    setTimeout(function(){
+      try{
+        say([
+          '«آفرین! بیا شروع کنیم.»',
+          '«اولین آزمون: <b>مواد خالص و مخلوط</b>»',
+          '«به هر ماده نگاه کن و تصمیم بگیر: آیا فقط یک نوع ماده است یا چند ماده با هم؟»',
+          '«هر پاسخ درست، ۱۰ امتیاز دارد.»'
+        ], function(){ loadStage1(); });
+      }catch(e){ console.error(e); loadStage1(); }
+    }, 400);
+  }catch(e){ console.error(e); }
+}
+
+window.addEventListener('load', function(){
+  try{ playPOV(); }catch(e){ console.error(e); }
+
+  var sb=$('startBtn'); if(sb) sb.addEventListener('click', startGame);
+  var dlgN=$('dlgNext'); if(dlgN) dlgN.addEventListener('click', nextLine);
+
+  var c1=document.querySelectorAll('#panel-1 .choice');
+  for(var i=0;i<c1.length;i++){
+    (function(b){
+      b.addEventListener('click', function(){ answerStage1(b, b.getAttribute('data-ans')); });
+    })(c1[i]);
+  }
+  var c2=document.querySelectorAll('#panel-2 .choice');
+  for(var j=0;j<c2.length;j++){
+    (function(b){
+      b.addEventListener('click', function(){ answerStage2(b, b.getAttribute('data-ans')); });
+    })(c2[j]);
+  }
+  var c3=document.querySelectorAll('#panel-3 .choice');
+  for(var k=0;k<c3.length;k++){
+    (function(b){
+      b.addEventListener('click', function(){ answerStage3(b, b.getAttribute('data-ans')); });
+    })(c3[k]);
+  }
+
+  var badgeB=$('badgeBtn');
+  if(badgeB) badgeB.addEventListener('click', function(){
+    var p=$('badgePopup'); if(p) p.classList.remove('show');
+  });
+  var sbC=$('sbClose');
+  if(sbC) sbC.addEventListener('click', function(){
+    var p=$('scoreboardPopup'); if(p) p.classList.remove('show');
+  });
+  var sbR=$('sbRestart');
+  if(sbR) sbR.addEventListener('click', function(){ location.reload(); });
+
+  document.querySelector('.step[data-step="1"]').classList.add('unlocked');
+
+  loadStage1(); loadStage2(); loadStage3();
+  switchTab(1);
+});
+
+setTimeout(function(){
+  var sb=$('startBtn');
+  if(sb&&!sb._bound){ sb._bound=true; sb.addEventListener('click', startGame); }
+}, 800);
+
+window.addEventListener('error', function(ev){ console.error('خطای بازی:', ev.message); });
+
+})();
+</script>
+</body>
+</html>
